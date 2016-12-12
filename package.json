@@ -1,0 +1,15 @@
+{
+  "name": "emergency-bot",
+  "version": "0.0.1",
+  "description": "Emergency bot using Microsoft Bot framework",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "botbuilder": "^3.4.4",
+    "restify": "^4.3.0"
+  }
+}
