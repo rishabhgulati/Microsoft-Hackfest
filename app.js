@@ -37,6 +37,7 @@ bot.dialog('/', [
         switch (session.userData.emergency) {
             case emergencies[0]:
                 session.send(emergencies[0]);
+                session.replaceDialog('/Health');
                 break;
             case emergencies[1]:
                 session.send(emergencies[1]);
@@ -45,32 +46,40 @@ bot.dialog('/', [
                 session.send(emergencies[2]);
                 break;
             default:
-                session.send("Unknown emergency selected");
-                //TODO how to give choice again?
+                //no default case required as the framework handles invalid inputs
+                //and prompts the user to enter a valid input
         }
     }
+]);
+
+//health conversation
+bot.dialog('/Health', [
+    function(session) {
+        builder.Prompts.text(session, "What type of pain are you experiencing");
+    },
     //figure out the type of emergency. Later use LUIS to get the emergency
-    /*function(session, results) {
+    function(session, results) {
         if (results.response.includes("chest")) {
-            session.userData.pain = "Chest Pain";
-            builder.Prompts.choice(session, "How severe?", ["Mild", "Sharp", "Severe"]);
+            session.userData.painType = "Chest Pain";
+            builder.Prompts.choice(session, "How severe is the pain?", ["Mild", "Sharp", "Severe"]);
         } else {
-            builder.Prompts.text(session, "I can only help diagnosing chest pain & head ache");
+            builder.Prompts.text(session, "I can only help diagnosing chestpain & headache");
         }
     },
     function(session, results) {
         session.userData.painLevel = results.response.entity;
-        console.log("pain level " + session.userData.painLevel);
         switch (session.userData.painLevel) {
             case "Mild":
             case "Sharp":
-                builder.Prompts.text(session, "Lets continue further");
+                session.send("Fetching your heartrate");
+                //code to fetch the heart rate
                 break;
             case "Severe":
-                builder.Prompts.text(session, "Pain is severe, connecting to a Professional");
+                builder.Prompts.text(session, "Connecting to a Professional");
                 break;
             default:
-                builder.Prompts.text(session, "Unknown state");
+                //no default case required as the framework handles invalid inputs
+                //and prompts the user to enter a valid input
         }
-    }*/
+    }
 ]);
