@@ -1,0 +1,332 @@
+{
+  "luis_schema_version": "1.3.0",
+  "name": "Frida",
+  "desc": "Frida",
+  "culture": "en-us",
+  "intents": [
+    {
+      "name": "askCrowd"
+    },
+    {
+      "name": "diagnose"
+    },
+    {
+      "name": "None"
+    },
+    {
+      "name": "search"
+    },
+    {
+      "name": "sendCall"
+    },
+    {
+      "name": "track"
+    }
+  ],
+  "entities": [
+    {
+      "name": "condition"
+    },
+    {
+      "name": "friend"
+    },
+    {
+      "name": "heading"
+    },
+    {
+      "name": "intensity"
+    },
+    {
+      "name": "location"
+    },
+    {
+      "name": "name"
+    },
+    {
+      "name": "police"
+    },
+    {
+      "name": "speed"
+    }
+  ],
+  "composites": [],
+  "closedLists": [],
+  "bing_entities": [
+    "encyclopedia",
+    "temperature"
+  ],
+  "actions": [
+    {
+      "actionName": "diagnose",
+      "intentName": "diagnose",
+      "channel": null,
+      "actionParameters": [
+        {
+          "parameterName": "username",
+          "entityName": "name",
+          "required": true,
+          "question": "What is your name?",
+          "phraseListFeatureName": null
+        },
+        {
+          "parameterName": "condition",
+          "entityName": "condition",
+          "required": true,
+          "question": "What is your condition?",
+          "phraseListFeatureName": null
+        },
+        {
+          "parameterName": "intensity",
+          "entityName": "intensity",
+          "required": true,
+          "question": "What is the intensity?",
+          "phraseListFeatureName": null
+        },
+        {
+          "parameterName": "what is your location?",
+          "entityName": "location",
+          "required": true,
+          "question": "Where are you?",
+          "phraseListFeatureName": null
+        }
+      ]
+    },
+    {
+      "actionName": "track",
+      "intentName": "sendCall",
+      "channel": {
+        "Name": "Http",
+        "Method": "JsonRequest",
+        "Settings": [
+          {
+            "Name": "Username",
+            "Value": "root"
+          },
+          {
+            "Name": "Url",
+            "Value": "http://make.call/restful/enpoint"
+          },
+          {
+            "Name": "ResponseTemplate",
+            "Value": ""
+          },
+          {
+            "Name": "Verb",
+            "Value": "put"
+          },
+          {
+            "Name": "Body",
+            "Value": ""
+          },
+          {
+            "Name": "Password",
+            "Value": "root"
+          }
+        ]
+      },
+      "actionParameters": [
+        {
+          "parameterName": "location",
+          "entityName": "location",
+          "required": true,
+          "question": "Where are you?",
+          "phraseListFeatureName": null
+        },
+        {
+          "parameterName": "pose",
+          "entityName": "heading",
+          "required": true,
+          "question": "What's your heading?",
+          "phraseListFeatureName": null
+        },
+        {
+          "parameterName": "speed",
+          "entityName": "speed",
+          "required": true,
+          "question": "How quickly are you going?",
+          "phraseListFeatureName": null
+        }
+      ]
+    }
+  ],
+  "model_features": [
+    {
+      "name": "name",
+      "mode": true,
+      "words": "Jon,Alex,Hannah,Dave,Mike",
+      "activated": true
+    },
+    {
+      "name": "condition",
+      "mode": true,
+      "words": "chestpain,headache,pain,shortness of breath",
+      "activated": true
+    },
+    {
+      "name": "intensity",
+      "mode": true,
+      "words": "low,medium,med,high,intense,1,10",
+      "activated": true
+    }
+  ],
+  "regex_features": [],
+  "utterances": [
+    {
+      "text": "call my friends for help",
+      "intent": "sendCall",
+      "entities": [
+        {
+          "entity": "friend",
+          "startPos": 2,
+          "endPos": 2
+        }
+      ]
+    },
+    {
+      "text": "what would you suggest?",
+      "intent": "search",
+      "entities": []
+    },
+    {
+      "text": "what would you do?",
+      "intent": "search",
+      "entities": []
+    },
+    {
+      "text": "what do you think?",
+      "intent": "search",
+      "entities": []
+    },
+    {
+      "text": "what do other people do?",
+      "intent": "askCrowd",
+      "entities": []
+    },
+    {
+      "text": "thoughts?",
+      "intent": "search",
+      "entities": []
+    },
+    {
+      "text": "what does the crowd think?",
+      "intent": "askCrowd",
+      "entities": []
+    },
+    {
+      "text": "what is popular?",
+      "intent": "askCrowd",
+      "entities": []
+    },
+    {
+      "text": "i am having a heart attack",
+      "intent": "None",
+      "entities": []
+    },
+    {
+      "text": "get assistance",
+      "intent": "sendCall",
+      "entities": []
+    },
+    {
+      "text": "my name is jon, i have chest pain at level 10",
+      "intent": "diagnose",
+      "entities": [
+        {
+          "entity": "condition",
+          "startPos": 8,
+          "endPos": 8
+        },
+        {
+          "entity": "name",
+          "startPos": 3,
+          "endPos": 3
+        },
+        {
+          "entity": "intensity",
+          "startPos": 11,
+          "endPos": 11
+        }
+      ]
+    },
+    {
+      "text": "i am on i-376, heading north at 60 mph",
+      "intent": "track",
+      "entities": [
+        {
+          "entity": "heading",
+          "startPos": 8,
+          "endPos": 8
+        },
+        {
+          "entity": "speed",
+          "startPos": 10,
+          "endPos": 10
+        },
+        {
+          "entity": "location",
+          "startPos": 3,
+          "endPos": 5
+        }
+      ]
+    },
+    {
+      "text": "help",
+      "intent": "diagnose",
+      "entities": []
+    },
+    {
+      "text": "my name is jon, i have chestpain at level 10",
+      "intent": "diagnose",
+      "entities": [
+        {
+          "entity": "condition",
+          "startPos": 7,
+          "endPos": 7
+        },
+        {
+          "entity": "intensity",
+          "startPos": 10,
+          "endPos": 10
+        }
+      ]
+    },
+    {
+      "text": "i am going really quickly",
+      "intent": "track",
+      "entities": [
+        {
+          "entity": "speed",
+          "startPos": 4,
+          "endPos": 4
+        }
+      ]
+    },
+    {
+      "text": "call the authorities",
+      "intent": "sendCall",
+      "entities": [
+        {
+          "entity": "police",
+          "startPos": 2,
+          "endPos": 2
+        }
+      ]
+    },
+    {
+      "text": "emergency",
+      "intent": "diagnose",
+      "entities": []
+    },
+    {
+      "text": "i am having chestpain",
+      "intent": "diagnose",
+      "entities": [
+        {
+          "entity": "condition",
+          "startPos": 3,
+          "endPos": 3
+        }
+      ]
+    }
+  ]
+}
