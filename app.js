@@ -1,6 +1,6 @@
 var restify = require('restify')
-,   builder = require('botbuilder')
-,   drbe = require('./packages/drbe/drbe.js');
+,   builder = require('botbuilder');
+//,   drbe = require('./packages/drbe/drbe.js');
 
 
 //=========================================================
