@@ -23,17 +23,39 @@ server.post('/api/messages', connector.listen());
 // Bots Dialogs
 //=========================================================
 
+var emergencies = ["Health", "Crime", "Catastrophe"];
+
 bot.dialog('/', [
+    //welcome the user, ask the emergency
     function(session) {
-        builder.Prompts.text(session, "Hello... What type of pain are you having?");
+        session.send("Hello");
+        builder.Prompts.choice(session, "What's the emergency?", emergencies);
     },
+    //work with selected emergency
     function(session, results) {
-        //todo: trigger LUIS to and trigger the dialog based on that
+        session.userData.emergency = results.response.entity;
+        switch (session.userData.emergency) {
+            case emergencies[0]:
+                session.send(emergencies[0]);
+                break;
+            case emergencies[1]:
+                session.send(emergencies[1]);
+                break;
+            case emergencies[2]:
+                session.send(emergencies[2]);
+                break;
+            default:
+                session.send("Unknown emergency selected");
+                //TODO how to give choice again?
+        }
+    }
+    //figure out the type of emergency. Later use LUIS to get the emergency
+    /*function(session, results) {
         if (results.response.includes("chest")) {
             session.userData.pain = "Chest Pain";
             builder.Prompts.choice(session, "How severe?", ["Mild", "Sharp", "Severe"]);
         } else {
-            builder.Prompts.text(session, "I don't know about this. Sorry");
+            builder.Prompts.text(session, "I can only help diagnosing chest pain & head ache");
         }
     },
     function(session, results) {
@@ -50,5 +72,5 @@ bot.dialog('/', [
             default:
                 builder.Prompts.text(session, "Unknown state");
         }
-    }
+    }*/
 ]);
