@@ -7,6 +7,7 @@ var builder = require('botbuilder');
 
 // Setup Restify Server
 var server = restify.createServer();
+server.use(restify.queryParser());
 server.listen(process.env.port || process.env.PORT || 3978, function() {
     console.log('%s listening to %s', server.name, server.url);
 });
@@ -18,6 +19,14 @@ var connector = new builder.ChatConnector({
 });
 var bot = new builder.UniversalBot(connector);
 server.post('/api/messages', connector.listen());
+
+function processSensorData(req, res, next) {
+  res.send('Got heartRate value '+req.params.heartrate);
+  next();
+}
+
+//read sensor data
+server.get('/sensor', processSensorData);
 
 //=========================================================
 // Bots Dialogs
