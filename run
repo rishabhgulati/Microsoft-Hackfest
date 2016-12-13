@@ -1,0 +1,5 @@
+#!/bin/sh
+
+sudo ejabberdctl start
+node app.js --xmpp boschpit_drbe sensor.andrew.cmu.edu boschsc15 --udp 127.0.0.1 9011 -r rules.js -t 'infrastructure' --log --persistent
+

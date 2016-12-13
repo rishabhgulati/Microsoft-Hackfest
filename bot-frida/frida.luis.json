@@ -5,7 +5,7 @@
   "culture": "en-us",
   "intents": [
     {
-      "name": "askCrowd"
+      "name": "askSupport"
     },
     {
       "name": "diagnose"
@@ -18,20 +18,31 @@
     },
     {
       "name": "sendCall"
-    },
-    {
-      "name": "track"
     }
   ],
   "entities": [
     {
-      "name": "condition"
+      "name": "$encyclopedia"
     },
     {
-      "name": "friend"
+      "name": "action"
     },
     {
-      "name": "heading"
+      "name": "answer"
+    },
+    {
+      "name": "emergency"
+    },
+    {
+      "name": "emergency contact"
+    },
+    {
+      "name": "emergency service",
+      "children": [
+        "police",
+        "firefighters",
+        "ambulance"
+      ]
     },
     {
       "name": "intensity"
@@ -43,17 +54,17 @@
       "name": "name"
     },
     {
-      "name": "police"
-    },
-    {
-      "name": "speed"
+      "name": "UserState",
+      "children": [
+        "Abnormal",
+        "Normal"
+      ]
     }
   ],
   "composites": [],
   "closedLists": [],
   "bing_entities": [
-    "encyclopedia",
-    "temperature"
+    "encyclopedia"
   ],
   "actions": [
     {
@@ -69,62 +80,12 @@
           "phraseListFeatureName": null
         },
         {
-          "parameterName": "condition",
-          "entityName": "condition",
-          "required": true,
-          "question": "What is your condition?",
-          "phraseListFeatureName": null
-        },
-        {
           "parameterName": "intensity",
           "entityName": "intensity",
           "required": true,
           "question": "What is the intensity?",
           "phraseListFeatureName": null
         },
-        {
-          "parameterName": "what is your location?",
-          "entityName": "location",
-          "required": true,
-          "question": "Where are you?",
-          "phraseListFeatureName": null
-        }
-      ]
-    },
-    {
-      "actionName": "track",
-      "intentName": "sendCall",
-      "channel": {
-        "Name": "Http",
-        "Method": "JsonRequest",
-        "Settings": [
-          {
-            "Name": "Username",
-            "Value": "root"
-          },
-          {
-            "Name": "Url",
-            "Value": "http://make.call/restful/enpoint"
-          },
-          {
-            "Name": "ResponseTemplate",
-            "Value": ""
-          },
-          {
-            "Name": "Verb",
-            "Value": "put"
-          },
-          {
-            "Name": "Body",
-            "Value": ""
-          },
-          {
-            "Name": "Password",
-            "Value": "root"
-          }
-        ]
-      },
-      "actionParameters": [
         {
           "parameterName": "location",
           "entityName": "location",
@@ -133,17 +94,38 @@
           "phraseListFeatureName": null
         },
         {
-          "parameterName": "pose",
-          "entityName": "heading",
+          "parameterName": "help",
+          "entityName": "answer",
           "required": true,
-          "question": "What's your heading?",
+          "question": "Should I call someone nearby?",
           "phraseListFeatureName": null
         },
         {
-          "parameterName": "speed",
-          "entityName": "speed",
+          "parameterName": "answer1",
+          "entityName": "emergency contact",
           "required": true,
-          "question": "How quickly are you going?",
+          "question": "I'm forwarding the call. Have a good day.",
+          "phraseListFeatureName": null
+        },
+        {
+          "parameterName": "answer2",
+          "entityName": "emergency service",
+          "required": true,
+          "question": "Ok, hold on the line. ",
+          "phraseListFeatureName": null
+        },
+        {
+          "parameterName": "condition",
+          "entityName": "UserState",
+          "required": true,
+          "question": "What is your condition?",
+          "phraseListFeatureName": null
+        },
+        {
+          "parameterName": "Assessment",
+          "entityName": "emergency",
+          "required": true,
+          "question": "What's the reason of your call?",
           "phraseListFeatureName": null
         }
       ]
@@ -159,29 +141,48 @@
     {
       "name": "condition",
       "mode": true,
-      "words": "chestpain,headache,pain,shortness of breath",
+      "words": "chest pain,headache,pain,shortness of breath,broken leg,head injury,fractured bone,I broke my leg,bruise",
       "activated": true
     },
     {
       "name": "intensity",
       "mode": true,
-      "words": "low,medium,med,high,intense,1,10",
+      "words": "low,medium,med,high,intense,1,10,painful,very painful,it hurts a lot",
+      "activated": true
+    },
+    {
+      "name": "location",
+      "mode": true,
+      "words": "Microsoft,San Francisco,Pittsburgh,park,nearby,ditch,forest,woods,lake",
+      "activated": true
+    },
+    {
+      "name": "friend",
+      "mode": true,
+      "words": "wife,family,friend,neighbor,boss,uncle,aunt,dad,Jon,James,Alex,Yoda,Spock",
+      "activated": true
+    },
+    {
+      "name": "answer",
+      "mode": true,
+      "words": "yes,no,thanks,unsure,maybe,why",
+      "activated": true
+    },
+    {
+      "name": "emergency service",
+      "mode": true,
+      "words": "ambulance,police,firefighters,Captain America",
+      "activated": true
+    },
+    {
+      "name": "emergency",
+      "mode": true,
+      "words": "problem,health problem,health condition",
       "activated": true
     }
   ],
   "regex_features": [],
   "utterances": [
-    {
-      "text": "call my friends for help",
-      "intent": "sendCall",
-      "entities": [
-        {
-          "entity": "friend",
-          "startPos": 2,
-          "endPos": 2
-        }
-      ]
-    },
     {
       "text": "what would you suggest?",
       "intent": "search",
@@ -198,70 +199,320 @@
       "entities": []
     },
     {
-      "text": "what do other people do?",
-      "intent": "askCrowd",
-      "entities": []
-    },
-    {
       "text": "thoughts?",
       "intent": "search",
       "entities": []
     },
     {
       "text": "what does the crowd think?",
-      "intent": "askCrowd",
+      "intent": "askSupport",
       "entities": []
     },
     {
       "text": "what is popular?",
-      "intent": "askCrowd",
+      "intent": "askSupport",
       "entities": []
     },
     {
-      "text": "i am having a heart attack",
-      "intent": "None",
-      "entities": []
-    },
-    {
-      "text": "get assistance",
-      "intent": "sendCall",
-      "entities": []
-    },
-    {
-      "text": "my name is jon, i have chest pain at level 10",
+      "text": "i am having chestpain",
       "intent": "diagnose",
       "entities": [
         {
-          "entity": "condition",
-          "startPos": 8,
-          "endPos": 8
+          "entity": "UserState",
+          "startPos": 3,
+          "endPos": 3
+        }
+      ]
+    },
+    {
+      "text": "high",
+      "intent": "diagnose",
+      "entities": [
+        {
+          "entity": "intensity",
+          "startPos": 0,
+          "endPos": 0
+        }
+      ]
+    },
+    {
+      "text": "i have an emergency",
+      "intent": "diagnose",
+      "entities": [
+        {
+          "entity": "emergency",
+          "startPos": 3,
+          "endPos": 3
         },
+        {
+          "entity": "UserState",
+          "startPos": 3,
+          "endPos": 3
+        }
+      ]
+    },
+    {
+      "text": "hello, i'm sick",
+      "intent": "diagnose",
+      "entities": [
+        {
+          "entity": "$encyclopedia",
+          "startPos": 0,
+          "endPos": 0
+        },
+        {
+          "entity": "UserState",
+          "startPos": 5,
+          "endPos": 5
+        }
+      ]
+    },
+    {
+      "text": "hi, my name is alex",
+      "intent": "diagnose",
+      "entities": [
         {
           "entity": "name",
           "startPos": 3,
           "endPos": 3
         },
         {
+          "entity": "name",
+          "startPos": 5,
+          "endPos": 5
+        }
+      ]
+    },
+    {
+      "text": "call my friends for help",
+      "intent": "None",
+      "entities": [
+        {
+          "entity": "emergency contact",
+          "startPos": 2,
+          "endPos": 2
+        }
+      ]
+    },
+    {
+      "text": "get assistance",
+      "intent": "None",
+      "entities": [
+        {
+          "entity": "$encyclopedia",
+          "startPos": 1,
+          "endPos": 1
+        }
+      ]
+    },
+    {
+      "text": "call the authorities",
+      "intent": "None",
+      "entities": []
+    },
+    {
+      "text": "call my wife",
+      "intent": "sendCall",
+      "entities": [
+        {
+          "entity": "emergency contact",
+          "startPos": 2,
+          "endPos": 2
+        }
+      ]
+    },
+    {
+      "text": "call my boss",
+      "intent": "sendCall",
+      "entities": [
+        {
+          "entity": "$encyclopedia",
+          "startPos": 2,
+          "endPos": 2
+        },
+        {
+          "entity": "emergency contact",
+          "startPos": 2,
+          "endPos": 2
+        }
+      ]
+    },
+    {
+      "text": "high, can you call someone nearby?",
+      "intent": "diagnose",
+      "entities": [
+        {
+          "entity": "emergency contact",
+          "startPos": 5,
+          "endPos": 5
+        },
+        {
           "entity": "intensity",
-          "startPos": 11,
-          "endPos": 11
+          "startPos": 0,
+          "endPos": 0
+        },
+        {
+          "entity": "location",
+          "startPos": 6,
+          "endPos": 6
+        }
+      ]
+    },
+    {
+      "text": "hello, i have a condition",
+      "intent": "diagnose",
+      "entities": [
+        {
+          "entity": "$encyclopedia",
+          "startPos": 0,
+          "endPos": 0
+        },
+        {
+          "entity": "UserState",
+          "startPos": 5,
+          "endPos": 5
+        }
+      ]
+    },
+    {
+      "text": "hello",
+      "intent": "diagnose",
+      "entities": []
+    },
+    {
+      "text": "yes",
+      "intent": "diagnose",
+      "entities": [
+        {
+          "entity": "$encyclopedia",
+          "startPos": 0,
+          "endPos": 0
+        }
+      ]
+    },
+    {
+      "text": "yes, thanks",
+      "intent": "diagnose",
+      "entities": [
+        {
+          "entity": "answer",
+          "startPos": 0,
+          "endPos": 0
+        }
+      ]
+    },
+    {
+      "text": "i have headache",
+      "intent": "diagnose",
+      "entities": [
+        {
+          "entity": "UserState",
+          "startPos": 2,
+          "endPos": 2
+        }
+      ]
+    },
+    {
+      "text": "yes, call my wife",
+      "intent": "diagnose",
+      "entities": [
+        {
+          "entity": "answer",
+          "startPos": 0,
+          "endPos": 0
+        }
+      ]
+    },
+    {
+      "text": "i fell in a ditch, i broke my leg",
+      "intent": "diagnose",
+      "entities": [
+        {
+          "entity": "UserState",
+          "startPos": 7,
+          "endPos": 9
+        },
+        {
+          "entity": "location",
+          "startPos": 4,
+          "endPos": 4
+        }
+      ]
+    },
+    {
+      "text": "yes, call the ambulance",
+      "intent": "diagnose",
+      "entities": [
+        {
+          "entity": "$encyclopedia",
+          "startPos": 4,
+          "endPos": 4
+        },
+        {
+          "entity": "answer",
+          "startPos": 0,
+          "endPos": 0
+        }
+      ]
+    },
+    {
+      "text": "call my friend jon",
+      "intent": "sendCall",
+      "entities": [
+        {
+          "entity": "name",
+          "startPos": 3,
+          "endPos": 3
+        },
+        {
+          "entity": "emergency contact",
+          "startPos": 2,
+          "endPos": 2
+        }
+      ]
+    },
+    {
+      "text": "call the ambulance",
+      "intent": "sendCall",
+      "entities": [
+        {
+          "entity": "$encyclopedia",
+          "startPos": 1,
+          "endPos": 2
+        }
+      ]
+    },
+    {
+      "text": "send me an ambulance",
+      "intent": "sendCall",
+      "entities": [
+        {
+          "entity": "$encyclopedia",
+          "startPos": 2,
+          "endPos": 3
+        }
+      ]
+    },
+    {
+      "text": "is there a urgent care nearby?",
+      "intent": "askSupport",
+      "entities": [
+        {
+          "entity": "emergency service",
+          "startPos": 3,
+          "endPos": 4
+        },
+        {
+          "entity": "location",
+          "startPos": 5,
+          "endPos": 5
         }
       ]
     },
     {
       "text": "i am on i-376, heading north at 60 mph",
-      "intent": "track",
+      "intent": "None",
       "entities": [
-        {
-          "entity": "heading",
-          "startPos": 8,
-          "endPos": 8
-        },
-        {
-          "entity": "speed",
-          "startPos": 10,
-          "endPos": 10
-        },
         {
           "entity": "location",
           "startPos": 3,
@@ -270,59 +521,27 @@
       ]
     },
     {
-      "text": "help",
-      "intent": "diagnose",
+      "text": "i am going really quickly",
+      "intent": "None",
       "entities": []
     },
     {
-      "text": "my name is jon, i have chestpain at level 10",
+      "text": "i have a health emergency",
       "intent": "diagnose",
       "entities": [
         {
-          "entity": "condition",
-          "startPos": 7,
-          "endPos": 7
-        },
-        {
-          "entity": "intensity",
-          "startPos": 10,
-          "endPos": 10
-        }
-      ]
-    },
-    {
-      "text": "i am going really quickly",
-      "intent": "track",
-      "entities": [
-        {
-          "entity": "speed",
-          "startPos": 4,
+          "entity": "emergency",
+          "startPos": 3,
           "endPos": 4
         }
       ]
     },
     {
-      "text": "call the authorities",
-      "intent": "sendCall",
-      "entities": [
-        {
-          "entity": "police",
-          "startPos": 2,
-          "endPos": 2
-        }
-      ]
-    },
-    {
-      "text": "emergency",
-      "intent": "diagnose",
-      "entities": []
-    },
-    {
-      "text": "i am having chestpain",
+      "text": "i have a problem",
       "intent": "diagnose",
       "entities": [
         {
-          "entity": "condition",
+          "entity": "emergency",
           "startPos": 3,
           "endPos": 3
         }

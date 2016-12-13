@@ -1,5 +1,7 @@
-var restify = require('restify');
-var builder = require('botbuilder');
+var restify = require('restify')
+,   builder = require('botbuilder')
+,   drbe = require('./packages/drbe/drbe.js');
+
 
 //=========================================================
 // Bot Setup
