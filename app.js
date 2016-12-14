@@ -1,6 +1,6 @@
-var restify = require('restify');
-,   builder = require('botbuilder');
-,   Sensor = require('./sensor.js');
+var restify = require('restify')
+,   builder = require('botbuilder')
+,   Sensor = require('./sensor.js')
 ,   sensor
 ,   drbe = require('./packages/drbe/drbe.js');
 
