@@ -40,6 +40,8 @@ bot.dialog('/', [
 
     function(session) {
         session.send("Hello");
+        console.log('HeartRate ' + bandDataHandler.getLastHeartRate() + ', Latitude ' +
+            bandDataHandler.getLatitude() + ', Longitude ' + bandDataHandler.getLongitude());
         builder.Prompts.choice(session, "What's the emergency?", emergencies);
     },
 
