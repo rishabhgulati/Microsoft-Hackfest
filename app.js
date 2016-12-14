@@ -1,10 +1,13 @@
-var builder = require('botbuilder');
-var restify = require('restify')
+var restify = require('restify');
+,   builder = require('botbuilder');
+,   Sensor = require('./sensor.js');
+,   sensor
 ,   drbe = require('./packages/drbe/drbe.js');
 
 // Setup Restify Server
 var server = restify.createServer();
-server.listen(process.env.port || process.env.PORT || 3978, function () {
+server.use(restify.queryParser());
+server.listen(process.env.port || process.env.PORT || 3978, function() {
     console.log('%s listening to %s', server.name, server.url);
 });
 
@@ -17,6 +20,23 @@ var bot = new builder.UniversalBot(connector);
 server.post('/api/messages', connector.listen());
 
 //const LuisModelUrl = process.env.LUIS_URL;
+function processSensorData(req, res, next) {
+    if (typeof sensor === "undefined") {
+        sensor = new Sensor();
+    }
+    var intHeartRate = parseInt(req.params.heartrate);
+    sensor.addHeartRate(intHeartRate);
+    console.log("got last heart rate " + sensor.getLastHeartRate());
+    res.send('Got heartRate value ' + sensor.getLastHeartRate());
+    next();
+}
+
+//read sensor data
+server.get('/sensor', processSensorData);
+
+//=========================================================
+// Bots Dialogs
+//=========================================================
 
 // Main dialog with LUIS
 //var recognizer = new builder.LuisRecognizer(LuisModelUrl);
@@ -94,8 +114,12 @@ bot.dialog('/Health', [
         switch (session.userData.painLevel) {
             case "Mild":
             case "Sharp":
-                session.send("Fetching your heartrate");
-                //code to fetch the heart rate
+                //retrieve heartrate
+                if (typeof sensor === "undefined") {
+                  session.send("Unable to fetch heartrate");
+                }else{
+                  session.send("Your current heartrate is " + sensor.getLastHeartRate());
+                }
                 break;
             case "Severe":
                 builder.Prompts.text(session, "Connecting to a Professional");
