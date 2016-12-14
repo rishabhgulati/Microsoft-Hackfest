@@ -1,7 +1,7 @@
-var restify = require('restify'),
-    builder = require('botbuilder'),
-    bandDataHandler = require('./BandDataHandler.js'),
-    sensor, drbe = require('./packages/drbe/drbe.js');
+var restify = require('restify');
+var builder = require('botbuilder');
+var bandDataHandler = require('./BandDataHandler.js');
+//var drbe = require('./packages/drbe/drbe.js');
 
 // Setup Restify Server
 var server = restify.createServer();
@@ -16,7 +16,14 @@ var connector = new builder.ChatConnector({
     appPassword: process.env.MICROSOFT_APP_PASSWORD
 });
 var bot = new builder.UniversalBot(connector);
+
+require("./dialog.health.js").healthDialog(bot);
+
+//var dialogHealth = require('./dialog.health.js');
+
 server.post('/api/messages', connector.listen());
+
+var emergencies = ['Health', 'Crime', 'Catastrophe'];
 
 //const LuisModelUrl = process.env.LUIS_URL;
 
@@ -26,6 +33,8 @@ server.get('/sensor', bandDataHandler.processBandData);
 //=========================================================
 // Bots Dialogs
 //=========================================================
+
+
 
 bot.dialog('/', [
 
