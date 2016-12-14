@@ -4,7 +4,7 @@ var values = [];
 module.exports.processBandData = function(req, res, next) {
     var intHeartRate = parseInt(req.params.heartrate);
     addHeartRate(intHeartRate);
-    console.log("got last heart rate " + getLastHeartRate());
+    //console.log("got last heart rate " + getLastHeartRate());
     res.send('Got heartRate value ' + getLastHeartRate());
     next();
 };
