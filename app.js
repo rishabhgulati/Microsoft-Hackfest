@@ -73,6 +73,10 @@ var intents = new builder.IntentDialog({ recognizers: [recognizer] })
             var contact = builder.EntityRecognizer.findEntity(args.entities, 'emergency contact');
             var location = builder.EntityRecognizer.findEntity(args.entities, 'location');
 
+
+            session.privateConversationData = args;
+            builder.Prompts.choice(session, "Hi. What is the reason for your call?", ["Health Emergency", "Crime Report", "Catastrophe"]);
+
             var msg = "";
 
             if (intensity) {
@@ -94,6 +98,31 @@ var intents = new builder.IntentDialog({ recognizers: [recognizer] })
     });
 
 bot.dialog('/', intents);
+
+
+bot.dialog('/', [
+
+  function(session) {
+  session.send("Hello");
+  builder.Prompts.choice(session, "What's the emergency?", emergencies);
+  },
+
+  function(session, results) {
+    session.userData.emergency = results.response.entity;
+    switch (session.userData.emergency) {
+      case emergencies[0]:
+        session.send(emergencies[0]);
+        session.replaceDialog('/Health');
+        break;
+      case emergencies[1]:
+        session.send(emergencies[1]);
+        break;
+      case emergencies[2]:
+        session.send(emergencies[2]);
+        break;
+      default:
+  }
+]);
 
 //health conversation
 bot.dialog('/Health', [
