@@ -17,7 +17,12 @@ var connector = new builder.ChatConnector({
     appPassword: process.env.MICROSOFT_APP_PASSWORD
 });
 var bot = new builder.UniversalBot(connector);
+
+//var dialogHealth = require('./dialog.health.js');
+
 server.post('/api/messages', connector.listen());
+
+var emergencies = ['Health', 'Crime', 'Catastrophe'];
 
 //const LuisModelUrl = process.env.LUIS_URL;
 function processSensorData(req, res, next) {
@@ -97,14 +102,14 @@ var intents = new builder.IntentDialog({ recognizers: [recognizer] })
         session.send('Sorry, I did not understand \'%s\'.', session.message.text);
     });
 
-bot.dialog('/', intents);
+bot.dialog('/HealthToo', intents);
 
 
 bot.dialog('/', [
 
   function(session) {
-  session.send("Hello");
-  builder.Prompts.choice(session, "What's the emergency?", emergencies);
+    session.send("Hello");
+    builder.Prompts.choice(session, "What's the emergency?", emergencies);
   },
 
   function(session, results) {
@@ -124,38 +129,4 @@ bot.dialog('/', [
   }
 ]);
 
-//health conversation
-bot.dialog('/Health', [
-    function(session) {
-        builder.Prompts.text(session, "What type of pain are you experiencing");
-    },
-    //figure out the type of emergency. Later use LUIS to get the emergency
-    function(session, results) {
-        if (results.response.includes("chest")) {
-            session.userData.painType = "Chest Pain";
-            builder.Prompts.choice(session, "How severe is the pain?", ["Mild", "Sharp", "Severe"]);
-        } else {
-            builder.Prompts.text(session, "I can only help diagnosing chestpain & headache");
-        }
-    },
-    function(session, results) {
-        session.userData.painLevel = results.response.entity;
-        switch (session.userData.painLevel) {
-            case "Mild":
-            case "Sharp":
-                //retrieve heartrate
-                if (typeof sensor === "undefined") {
-                  session.send("Unable to fetch heartrate");
-                }else{
-                  session.send("Your current heartrate is " + sensor.getLastHeartRate());
-                }
-                break;
-            case "Severe":
-                builder.Prompts.text(session, "Connecting to a Professional");
-                break;
-            default:
-                //no default case required as the framework handles invalid inputs
-                //and prompts the user to enter a valid input
-        }
-    }
-]);
+healthDialog = require("./dialog.health.js").healthDialog;
