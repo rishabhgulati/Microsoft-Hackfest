@@ -1,6 +1,6 @@
 var restify = require('restify'),
     builder = require('botbuilder'),
-    Sensor = require('./sensor.js'),
+    bandDataHandler = require('./BandDataHandler.js'),
     sensor, drbe = require('./packages/drbe/drbe.js');
 
 // Setup Restify Server
@@ -19,19 +19,9 @@ var bot = new builder.UniversalBot(connector);
 server.post('/api/messages', connector.listen());
 
 //const LuisModelUrl = process.env.LUIS_URL;
-function processSensorData(req, res, next) {
-    if (typeof sensor === "undefined") {
-        sensor = new Sensor();
-    }
-    var intHeartRate = parseInt(req.params.heartrate);
-    sensor.addHeartRate(intHeartRate);
-    console.log("got last heart rate " + sensor.getLastHeartRate());
-    res.send('Got heartRate value ' + sensor.getLastHeartRate());
-    next();
-}
 
-//read sensor data
-server.get('/sensor', processSensorData);
+//process microsoft band data
+server.get('/sensor', bandDataHandler.processBandData);
 
 //=========================================================
 // Bots Dialogs
@@ -61,5 +51,3 @@ bot.dialog('/', [
         }
     }
 ]);
-
-
