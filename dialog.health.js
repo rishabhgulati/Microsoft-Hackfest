@@ -1,7 +1,7 @@
 
 //health conversation
 
-exports.healthDialog = function (bot){
+exports.healthDialog = function (bot, builder){
 
   var dialog = bot.dialog('/Health', [
       function(session) {
@@ -13,7 +13,7 @@ exports.healthDialog = function (bot){
               session.userData.painType = "chestpain";
               builder.Prompts.choice(session, "How severe is the pain?", ["Mild", "Sharp", "Severe"]);
           }
-          if (results.response.include("headache")) {
+          else if (results.response.includes("headache")) {
               session.userData.painType = "headache";
               builder.Prompts.choice(session, "How severe is the pain?", ["Mild", "Sharp", "Severe"]);
           } else {
