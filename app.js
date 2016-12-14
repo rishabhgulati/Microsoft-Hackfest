@@ -1,6 +1,8 @@
-var restify = require('restify')
-,   builder = require('botbuilder');
-//,   drbe = require('./packages/drbe/drbe.js');
+var restify = require('restify');
+var builder = require('botbuilder');
+var Sensor = require('./sensor.js');
+var sensor;
+//var drbe = require('./packages/drbe/drbe.js');
 
 
 //=========================================================
@@ -23,8 +25,14 @@ var bot = new builder.UniversalBot(connector);
 server.post('/api/messages', connector.listen());
 
 function processSensorData(req, res, next) {
-  res.send('Got heartRate value '+req.params.heartrate);
-  next();
+    if (typeof sensor === "undefined") {
+        sensor = new Sensor();
+    }
+    var intHeartRate = parseInt(req.params.heartrate);
+    sensor.addHeartRate(intHeartRate);
+    console.log("got last heart rate " + sensor.getLastHeartRate());
+    res.send('Got heartRate value ' + sensor.getLastHeartRate());
+    next();
 }
 
 //read sensor data
@@ -82,8 +90,12 @@ bot.dialog('/Health', [
         switch (session.userData.painLevel) {
             case "Mild":
             case "Sharp":
-                session.send("Fetching your heartrate");
-                //code to fetch the heart rate
+                //retrieve heartrate
+                if (typeof sensor === "undefined") {
+                  session.send("Unable to fetch heartrate");
+                }else{
+                  session.send("Your current heartrate is " + sensor.getLastHeartRate());
+                }
                 break;
             case "Severe":
                 builder.Prompts.text(session, "Connecting to a Professional");
