@@ -1,8 +1,7 @@
-var restify = require('restify')
-,   builder = require('botbuilder')
-,   Sensor = require('./sensor.js')
-,   sensor
-,   drbe = require('./packages/drbe/drbe.js');
+var restify = require('restify'),
+    builder = require('botbuilder'),
+    Sensor = require('./sensor.js'),
+    sensor, drbe = require('./packages/drbe/drbe.js');
 
 // Setup Restify Server
 var server = restify.createServer();
@@ -41,9 +40,11 @@ server.get('/sensor', processSensorData);
 // Main dialog with LUIS
 //var recognizer = new builder.LuisRecognizer(LuisModelUrl);
 var recognizer = new builder.LuisRecognizer('https://iswudev.azure-api.net/luis/v2.0/apps/98eead94-8470-4337-9280-5bb7d5fb8502?subscription-key=c2cd164e833947fbb41ae9a3d9886a1f&verbose=true');
-var intents = new builder.IntentDialog({ recognizers: [recognizer] })
+var intents = new builder.IntentDialog({
+        recognizers: [recognizer]
+    })
     .matches('sendCall', [
-        function (session, args, next) {
+        function(session, args, next) {
 
             var contact = builder.EntityRecognizer.findEntity(args.entities, 'emergency contact');
             var name = builder.EntityRecognizer.findEntity(args.entities, 'name');
@@ -52,21 +53,21 @@ var intents = new builder.IntentDialog({ recognizers: [recognizer] })
             var msg = "";
 
             if (contact) {
-                msg += "I think your contact is: "+contact.entity+"\n";
+                msg += "I think your contact is: " + contact.entity + "\n";
             }
             if (name) {
-                msg += "I think your name is: "+name.entity+"\n";
+                msg += "I think your name is: " + name.entity + "\n";
             }
             if (encyclopedia) {
-                msg += "I think your encyclopedia is: "+encyclopedia.entity+"\n";
+                msg += "I think your encyclopedia is: " + encyclopedia.entity + "\n";
             }
 
 
-            session.send('sendCall triggered: \'%s\'\n\n%s', session.message.text,msg);
+            session.send('sendCall triggered: \'%s\'\n\n%s', session.message.text, msg);
         }
     ])
     .matches('diagnose', [
-        function (session, args, next) {
+        function(session, args, next) {
 
             // try extracting entities
             var intensity = builder.EntityRecognizer.findEntity(args.entities, 'intensity');
@@ -80,48 +81,49 @@ var intents = new builder.IntentDialog({ recognizers: [recognizer] })
             var msg = "";
 
             if (intensity) {
-                msg += "I think your intensity is: "+intensity.entity+"\n";
+                msg += "I think your intensity is: " + intensity.entity + "\n";
             }
             if (contact) {
-                msg += "I think your contact is: "+contact.entity+"\n";
+                msg += "I think your contact is: " + contact.entity + "\n";
             }
             if (location) {
-                msg += "I think your location is: "+location.entity+"\n";
+                msg += "I think your location is: " + location.entity + "\n";
             }
 
 
-            session.send('diagnos triggered: \'%s\'\n\n%s', session.message.text,msg);
+            session.send('diagnos triggered: \'%s\'\n\n%s', session.message.text, msg);
         }
     ])
     .onDefault((session) => {
         session.send('Sorry, I did not understand \'%s\'.', session.message.text);
     });
 
-bot.dialog('/', intents);
+//bot.dialog('/', intents);
 
 
 bot.dialog('/', [
 
-  function(session) {
-  session.send("Hello");
-  builder.Prompts.choice(session, "What's the emergency?", emergencies);
-  },
+    function(session) {
+        session.send("Hello");
+        builder.Prompts.choice(session, "What's the emergency?", emergencies);
+    },
 
-  function(session, results) {
-    session.userData.emergency = results.response.entity;
-    switch (session.userData.emergency) {
-      case emergencies[0]:
-        session.send(emergencies[0]);
-        session.replaceDialog('/Health');
-        break;
-      case emergencies[1]:
-        session.send(emergencies[1]);
-        break;
-      case emergencies[2]:
-        session.send(emergencies[2]);
-        break;
-      default:
-  }
+    function(session, results) {
+        session.userData.emergency = results.response.entity;
+        switch (session.userData.emergency) {
+            case emergencies[0]:
+                session.send(emergencies[0]);
+                session.replaceDialog('/Health');
+                break;
+            case emergencies[1]:
+                session.send(emergencies[1]);
+                break;
+            case emergencies[2]:
+                session.send(emergencies[2]);
+                break;
+            default:
+        }
+    }
 ]);
 
 //health conversation
@@ -145,9 +147,9 @@ bot.dialog('/Health', [
             case "Sharp":
                 //retrieve heartrate
                 if (typeof sensor === "undefined") {
-                  session.send("Unable to fetch heartrate");
-                }else{
-                  session.send("Your current heartrate is " + sensor.getLastHeartRate());
+                    session.send("Unable to fetch heartrate");
+                } else {
+                    session.send("Your current heartrate is " + sensor.getLastHeartRate());
                 }
                 break;
             case "Severe":
