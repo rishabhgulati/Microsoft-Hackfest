@@ -39,7 +39,7 @@ server.get('/sensor', bandDataHandler.processBandData);
 bot.dialog('/', [
 
     function(session) {
-        session.send("Hello");
+        session.send("Hello. I am an emergency bot.");
         builder.Prompts.choice(session, "What's the emergency?", emergencies);
     },
 

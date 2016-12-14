@@ -1,7 +1,8 @@
-
 //health conversation
 
 exports.healthDialog = function (bot, builder){
+
+  var intents = require("./dialog.luis.js").luis(builder);
 
   var dialog = bot.dialog('/Health', [
       function(session) {
@@ -24,6 +25,8 @@ exports.healthDialog = function (bot, builder){
           session.userData.painLevel = results.response.entity;
           switch (session.userData.painLevel) {
               case "Mild":
+                  session.send("Ping --> Mild case");
+                  break;
               case "Sharp":
                   //retrieve heartrate
                   if (typeof sensor === "undefined") {
@@ -33,13 +36,17 @@ exports.healthDialog = function (bot, builder){
                   }
                   break;
               case "Severe":
-                  builder.Prompts.text(session, "Connecting to a Professional");
+
+                  bot.dialog('/diagnose',intents);
                   break;
               default:
                   session.replaceDialog("/");
                   //no default case required as the framework handles invalid inputs
                   //and prompts the user to enter a valid input
           }
+      },
+      function(session){
+
       }
   ]);
 
