@@ -43,7 +43,7 @@ var getCards = function(data, session, bot, builder) {
     }
 }
 
-exports.luis = function(bandDataHandler){
+exports.luis = function(bot, bandDataHandler){
 var intents = new builder.IntentDialog({
         recognizers: [recognizer]
     })

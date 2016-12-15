@@ -35,7 +35,7 @@ exports.healthDialog = function (bot, builder, bandDataHandler){
   }
 
   //var intents = require("./dialog.luis.origin.js").luis(builder);
-  var intents = require("./packages/luis/bot-frida/dialog.luis.main.js").luis(bandDataHandler);
+  var intents = require("./packages/luis/bot-frida/dialog.luis.main.js").luis(bot, bandDataHandler);
   bot.dialog('/',intents);
 
   var dialog = bot.dialog('/health', [
