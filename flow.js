@@ -5,9 +5,12 @@ const LuisModeUrl = /*process.env.LUIS_URL ||*/'https://iswudev.azure-api.net/lu
 const recognizer = new builder.LuisRecognizer(LuisModeUrl);
 //const recognizer = new builder.LuisRecognizer('https://iswudev.azure-api.net/luis/v2.0/apps/98eead94-8470-4337-9280-5bb7d5fb8502?subscription-key=c2cd164e833947fbb41ae9a3d9886a1f&verbose=true');
 //const recognizer = new builder.LuisRecognizer('https://iswudev.azure-api.net/luis/v2.0/apps/8b5b16e1-6cdb-4b1c-ac30-62c4d499c6cd?subscription-key=c2cd164e833947fbb41ae9a3d9886a1f&verbose=true');
-const intents = new builder.IntentDialog({ recognizers: [recognizer] })
+module.exports = new builder.IntentDialog({ recognizers: [recognizer] })
     .matches('diagnose', [
         (session, args, next) => {
+            var fetchArgs = (args)? args : null;
+            console.log(fetchArgs);
+
             session.privateConversationData.args = args;
             let userState = session.privateConversationData.userState = builder.EntityRecognizer.findEntity(args.entities, 'UserState');
             if (userState) {
@@ -38,7 +41,7 @@ const intents = new builder.IntentDialog({ recognizers: [recognizer] })
                 // determine location
                 builder.Prompts.text(session, 'What is your location?');
             } else {
-                session.endConversation(`You're not dead yet. (keyword: yet)`)
+                session.endConversation("You're not dead yet. (keyword: yet)");
             }
         },
         (session, results) => {
@@ -52,6 +55,9 @@ const intents = new builder.IntentDialog({ recognizers: [recognizer] })
     ])
     .onDefault([
       (session, args, next) => {
-        session.endConversation("Triggered \'onDefault\' -- Done")
+        var fetchArgs = (args)? args : null;
+        console.log(fetchArgs);
+
+        session.endConversation("Triggered \'onDefault\' -- Done");
       }
     ])
