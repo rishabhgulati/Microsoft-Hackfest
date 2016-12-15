@@ -18,7 +18,7 @@ var nools = require('nools')
   , winston = require('winston') // a multi-transport async logging library
   , moment = require('moment') // parse/validate/manipulate/display dates
   , stdio = require('stdio') // commandline argument interface
-  , uuid = require('node-uuid');
+  , uuid = require('uuid');
   // add timed-event/CRON functionlity -- node-schedule, timers (native), etc
 
 var initTime = moment().format();
@@ -34,7 +34,7 @@ var argv = process.argv
 var logger = (conf.loggingEnabled) ? new (winston.Logger)({
   transports: [
     new (winston.transports.Console)({
-      handleExceptions: false,
+      handleExceptions: true,
       json: true
     })
     , new (winston.transports.File)({
@@ -44,7 +44,7 @@ var logger = (conf.loggingEnabled) ? new (winston.Logger)({
 }) : new (winston.Logger)({
   transports: [
     new (winston.transports.Console)({
-      handleExceptions: false,
+      handleExceptions: true,
       json: true
     })
   ]
@@ -53,7 +53,7 @@ var logger = (conf.loggingEnabled) ? new (winston.Logger)({
 var storage = new (winston.Logger)({
   transports: [
     new (winston.transports.Console)({
-      handleExceptions: false,
+      handleExceptions: true,
       json: true
     })
     , new (winston.transports.File)({
