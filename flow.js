@@ -1,5 +1,6 @@
 "use strict"
 const builder = require('botbuilder');
+var Bing = require('node-bing-api')({accKey: process.env.BING_SEARCH});
 
 const LuisModeUrl = /*process.env.LUIS_URL ||*/'https://iswudev.azure-api.net/luis/v2.0/apps/c4af3be6-61b2-4c02-8b12-6a1f7f10eec8?subscription-key=c2cd164e833947fbb41ae9a3d9886a1f&verbose=true';
 const recognizer = new builder.LuisRecognizer(LuisModeUrl);
@@ -53,6 +54,16 @@ module.exports = new builder.IntentDialog({ recognizers: [recognizer] })
             }
         }
     ])
+    .matches('search',[
+      (session, args, next) => {
+        session.send("(\'search\' activation)");
+        Bing.composite(JSON.stringify(session.message.text), {
+          top: 5
+        }, (error, res, body) => {
+          session.send("Here are some search results for "+JSON.stringify(session.message.text)+": %s", JSON.stringify(body.news));
+        })
+      }
+    ])
     .onDefault([
       (session, args, next) => {
         var fetchArgs = (args)? args : null;
@@ -60,4 +71,4 @@ module.exports = new builder.IntentDialog({ recognizers: [recognizer] })
 
         session.endConversation("Triggered \'onDefault\' -- Done");
       }
-    ])
+    ]);
