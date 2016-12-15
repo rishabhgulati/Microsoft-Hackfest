@@ -9,7 +9,8 @@ exports.luis = function(builder){
     var intents = new builder.IntentDialog({ recognizers: [recognizer] })
     .matches('sayHello', [
         function (session, args, next){
-          session.send("sayHello Activation.");
+          session.send("(\'sayHello\' activation)");
+          session.send("Hello!");
           console.log(args);
         }
     ])
@@ -35,7 +36,7 @@ exports.luis = function(builder){
             }
 
 
-            session.send('sendCall triggered: \'%s\'\n\n%s', session.message.text,msg);
+            session.send('(\'sendCall\' activation: \'%s\'\n\n%s)', session.message.text,msg);
         }
     ])
     .matches('diagnose', [
@@ -65,7 +66,7 @@ exports.luis = function(builder){
             }
 
 
-            session.send('diagnos triggered: \'%s\'\n\n%s', session.message.text,msg);
+            session.send('(\'Diagnose\' activation: \'%s\'\n\n%s)', session.message.text,msg);
         }
     ])
     .onDefault((session) => {
