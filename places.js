@@ -1,7 +1,7 @@
 var placesApiKey = process.env.GOOGLE_PLACES_API_KEY;
 
 // supported types can be found here https://developers.google.com/places/web-service/supported_types
-module.exports.getPlaces = function(latitude, longitude, type) {
+module.exports.getPlaces = function(latitude, longitude, callback) {
     if (typeof latitude === 'undefined' || typeof longitude === 'undefined') {
         console.log("latitude and longitude needed to get places");
         return null;
@@ -14,16 +14,16 @@ module.exports.getPlaces = function(latitude, longitude, type) {
         //var placesApiURL = "https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=" + location + "&radius=500&type=hospital&key=" + placesApiKey;
         var placesApiURL = "/maps/api/place/nearbysearch/json?location=" + location + "&radius=500&type=hospital&key=" + placesApiKey;
         console.log(placesApiURL);
-        getPlaces(placesApiURL);
-        //return places
+
+        callGooglePlacesApi(placesApiURL, callback);
     }
 }
 
-function getPlaces(url) {
+//get JSON response from google places api using the passed callback
+function callGooglePlacesApi(url, callback) {
     var https = require('https');
     var options = {
         host: 'maps.googleapis.com',
-        //port: 443,
         path: url,
         method: 'GET',
         headers: {
@@ -33,8 +33,13 @@ function getPlaces(url) {
 
     var req = https.request(options, function(res) {
         console.log(res.statusCode);
+        var body = '';
         res.on('data', function(d) {
-            process.stdout.write(d);
+            body += d;
+        });
+        res.on('end', function() {
+            //console.log(body);
+            callback(JSON.parse(body));
         });
     });
     req.end();

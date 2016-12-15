@@ -18,10 +18,10 @@ var connector = new builder.ChatConnector({
 var bot = new builder.UniversalBot(connector);
 
 //non luis simple health waterfall
-//require("./dialog.bot.health.js").healthBotDialog(bot, builder, bandDataHandler);
+require("./dialog.bot.health.js").healthBotDialog(bot, builder, bandDataHandler);
 
 //health dialog with luis integration
-require("./dialog.health.js").healthDialog(bot, builder, process);
+//require("./dialog.health.js").healthDialog(bot, builder, process);
 
 server.post('/api/messages', connector.listen());
 
@@ -36,7 +36,7 @@ server.get('/sensor', bandDataHandler.processBandData);
 // Bots Dialogs
 //=========================================================
 
-bot.dialog('/HealthWF', [
+bot.dialog('/', [
 
     function(session) {
         session.send("Hello. I am an emergency bot.");
