@@ -1,6 +1,6 @@
 var restify = require('restify');
 var builder = require('botbuilder');
-var bandDataHandler = require('./BandDataHandler.js');
+var bandDataHandler = require('./libs/msband2/bandDataHandler.js');
 //var drbe = require('./packages/drbe/drbe.js');
 
 // Setup Restify Server
@@ -21,7 +21,7 @@ var bot = new builder.UniversalBot(connector);
 //require("./dialog.bot.health.js").healthBotDialog(bot, builder, bandDataHandler);
 
 //health dialog with luis integration
-//require("./dialog.health.js").healthDialog(bot, builder, process);
+require("./dialog.health.js").healthDialog(bot, builder, bandDataHandler);
 
 server.post('/api/messages', connector.listen());
 
@@ -36,7 +36,7 @@ server.get('/sensor', bandDataHandler.processBandData);
 // Bots Dialogs
 //=========================================================
 
-bot.dialog('/', [
+bot.dialog('/HealthToo', [
 
     function(session) {
         session.send("Hello. I am an emergency bot.");

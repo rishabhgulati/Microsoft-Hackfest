@@ -1,5 +1,6 @@
 "use strict"
 const builder = require('botbuilder');
+var places = require('./../../../libs/places/places.js');
 var Bing = require('node-bing-api')({accKey: process.env.BING_SEARCH});
 
 const LuisModeUrl = /*process.env.LUIS_URL ||*/'https://iswudev.azure-api.net/luis/v2.0/apps/c4af3be6-61b2-4c02-8b12-6a1f7f10eec8?subscription-key=c2cd164e833947fbb41ae9a3d9886a1f&verbose=true';
@@ -43,6 +44,30 @@ module.exports = new builder.IntentDialog({ recognizers: [recognizer] })
                 builder.Prompts.text(session, 'What is your location?');
                 //fetch GPS location?
             } else if((intensity == 'low') || (intensity == 'med')) {
+
+                var heartRate = bandDataHandler.getLastHeartRate();
+                if (typeof heartRate === 'undefined' || heartRate == 0) {
+                    session.send("Can't detect heart rate");
+                    //suggest doctors/hospitals nearby
+                    places.getPlaces(bandDataHandler.getLatitude(), bandDataHandler.getLongitude(), function(data) {
+                        getCards(data, session, bot, builder);
+                    });
+                    session.endDialog();
+                    //TODO prompt question to user
+                } else {
+                    if (heartRate > 60 && heartRate < 100) {
+                        session.send("Heartrate seems to be normal");
+                        //suggest doctors/hospitals nearby
+                        places.getPlaces(bandDataHandler.getLatitude(), bandDataHandler.getLongitude(), function(data) {
+                            getCards(data, session, bot, builder);
+                        });
+                        session.endDialog();
+                    } else {
+                        session.send("Calling 911, heartrate abnormal " + heartRate);
+                        session.endDialog();
+                    }
+                }
+
                 session.endConversation("(Severity --> low/med) You're not dead yet. (keyword: yet)");
             } else {
                 session.endConversation("You're not dead yet. (keyword: yet)");
