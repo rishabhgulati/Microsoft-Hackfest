@@ -40,7 +40,7 @@ exports.healthDialog = function (bot, builder, bandDataHandler){
 
   var dialog = bot.dialog('/health', [
       function(session) {
-          builder.Prompts.text(session, "What's your condition?");
+          builder.Prompts.text(session, "What's your condition? (e.g., \"chestpain\", \"headache\")");
       },
       //figure out the type of emergency. Later use LUIS to get the emergency
       function(session, results) {
@@ -70,6 +70,7 @@ exports.healthDialog = function (bot, builder, bandDataHandler){
                   }
                   break;
               case "Severe":
+                  session.send("Ping --> severe case");
 
                   break;
               default:
