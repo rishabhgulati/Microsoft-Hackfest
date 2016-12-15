@@ -18,7 +18,7 @@ var connector = new builder.ChatConnector({
 var bot = new builder.UniversalBot(connector);
 
 //non luis simple health waterfall
-require("./dialog.bot.health.js").healthBotDialog(bot, builder, bandDataHandler);
+//require("./dialog.bot.health.js").healthBotDialog(bot, builder, bandDataHandler);
 
 //health dialog with luis integration
 //require("./dialog.health.js").healthDialog(bot, builder, process);
