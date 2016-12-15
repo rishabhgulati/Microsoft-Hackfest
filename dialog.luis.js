@@ -9,11 +9,18 @@ exports.luis = function(builder){
     var intents = new builder.IntentDialog({ recognizers: [recognizer] })
     .matches('sayHello', [
         function (session, args, next){
-          session.send("sayHello Activation.");
+          session.send("(\'sayHello\' activation)");
+          session.send("Hello!");
+
+          var fetchArgs = (args)? args : null;
+          console.log(fetchArgs);
         }
     ])
     .matches('sendCall', [
         function (session, args, next) {
+
+            var fetchArgs = (args)? args : null;
+            console.log(fetchArgs);
 
             var contact = builder.EntityRecognizer.findEntity(args.entities, 'emergency contact');
             var name = builder.EntityRecognizer.findEntity(args.entities, 'name');
@@ -32,7 +39,7 @@ exports.luis = function(builder){
             }
 
 
-            session.send('sendCall triggered: \'%s\'\n\n%s', session.message.text,msg);
+            session.send('(\'sendCall\' activation: \'%s\'\n\n%s)', session.message.text,msg);
         }
     ])
     .matches('diagnose', [
@@ -60,11 +67,14 @@ exports.luis = function(builder){
             }
 
 
-            session.send('diagnos triggered: \'%s\'\n\n%s', session.message.text,msg);
+            session.send('(\'Diagnose\' activation: \'%s\'\n\n%s)', session.message.text,msg);
         }
     ])
     .onDefault((session) => {
         session.send('Sorry, I did not understand \'%s\'.', session.message.text);
+
+        var fetchArgs = (args)? args : null;
+        console.log(fetchArgs);
     });
 
     return intents;

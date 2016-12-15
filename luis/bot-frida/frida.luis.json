@@ -14,6 +14,9 @@
       "name": "None"
     },
     {
+      "name": "sayHello"
+    },
+    {
       "name": "search"
     },
     {
@@ -68,8 +71,8 @@
   ],
   "actions": [
     {
-      "actionName": "diagnose",
-      "intentName": "diagnose",
+      "actionName": "sayHello",
+      "intentName": "sayHello",
       "channel": null,
       "actionParameters": [
         {
@@ -78,21 +81,14 @@
           "required": true,
           "question": "What is your name?",
           "phraseListFeatureName": null
-        },
-        {
-          "parameterName": "intensity",
-          "entityName": "intensity",
-          "required": true,
-          "question": "What is the intensity?",
-          "phraseListFeatureName": null
-        },
-        {
-          "parameterName": "location",
-          "entityName": "location",
-          "required": true,
-          "question": "Where are you?",
-          "phraseListFeatureName": null
-        },
+        }
+      ]
+    },
+    {
+      "actionName": "sendCall",
+      "intentName": "sendCall",
+      "channel": null,
+      "actionParameters": [
         {
           "parameterName": "help",
           "entityName": "answer",
@@ -101,7 +97,7 @@
           "phraseListFeatureName": null
         },
         {
-          "parameterName": "answer1",
+          "parameterName": "answer",
           "entityName": "emergency contact",
           "required": true,
           "question": "I'm forwarding the call. Have a good day.",
@@ -112,6 +108,27 @@
           "entityName": "emergency service",
           "required": true,
           "question": "Ok, hold on the line. ",
+          "phraseListFeatureName": null
+        },
+        {
+          "parameterName": "location",
+          "entityName": "location",
+          "required": true,
+          "question": "Where are you",
+          "phraseListFeatureName": null
+        }
+      ]
+    },
+    {
+      "actionName": "diagnose",
+      "intentName": "diagnose",
+      "channel": null,
+      "actionParameters": [
+        {
+          "parameterName": "intensity",
+          "entityName": "intensity",
+          "required": true,
+          "question": "What is the intensity?",
           "phraseListFeatureName": null
         },
         {
@@ -141,7 +158,7 @@
     {
       "name": "condition",
       "mode": true,
-      "words": "chest pain,headache,pain,shortness of breath,broken leg,head injury,fractured bone,I broke my leg,bruise",
+      "words": "chestpain,headache,pain,shortness of breath,broken leg,head injury,fractured bone,I broke my leg,bruise",
       "activated": true
     },
     {
@@ -214,17 +231,6 @@
       "entities": []
     },
     {
-      "text": "i am having chestpain",
-      "intent": "diagnose",
-      "entities": [
-        {
-          "entity": "UserState",
-          "startPos": 3,
-          "endPos": 3
-        }
-      ]
-    },
-    {
       "text": "high",
       "intent": "diagnose",
       "entities": [
@@ -269,7 +275,7 @@
     },
     {
       "text": "hi, my name is alex",
-      "intent": "diagnose",
+      "intent": "sayHello",
       "entities": [
         {
           "entity": "name",
@@ -339,7 +345,7 @@
     },
     {
       "text": "high, can you call someone nearby?",
-      "intent": "diagnose",
+      "intent": "sendCall",
       "entities": [
         {
           "entity": "emergency contact",
@@ -376,8 +382,14 @@
     },
     {
       "text": "hello",
-      "intent": "diagnose",
-      "entities": []
+      "intent": "sayHello",
+      "entities": [
+        {
+          "entity": "$encyclopedia",
+          "startPos": 0,
+          "endPos": 0
+        }
+      ]
     },
     {
       "text": "yes",
@@ -414,7 +426,7 @@
     },
     {
       "text": "yes, call my wife",
-      "intent": "diagnose",
+      "intent": "sendCall",
       "entities": [
         {
           "entity": "answer",
@@ -424,24 +436,8 @@
       ]
     },
     {
-      "text": "i fell in a ditch, i broke my leg",
-      "intent": "diagnose",
-      "entities": [
-        {
-          "entity": "UserState",
-          "startPos": 7,
-          "endPos": 9
-        },
-        {
-          "entity": "location",
-          "startPos": 4,
-          "endPos": 4
-        }
-      ]
-    },
-    {
       "text": "yes, call the ambulance",
-      "intent": "diagnose",
+      "intent": "sendCall",
       "entities": [
         {
           "entity": "$encyclopedia",
@@ -476,8 +472,8 @@
       "intent": "sendCall",
       "entities": [
         {
-          "entity": "$encyclopedia",
-          "startPos": 1,
+          "entity": "emergency service::ambulance",
+          "startPos": 2,
           "endPos": 2
         }
       ]
@@ -487,8 +483,8 @@
       "intent": "sendCall",
       "entities": [
         {
-          "entity": "$encyclopedia",
-          "startPos": 2,
+          "entity": "emergency service::ambulance",
+          "startPos": 3,
           "endPos": 3
         }
       ]
@@ -544,6 +540,33 @@
           "entity": "emergency",
           "startPos": 3,
           "endPos": 3
+        }
+      ]
+    },
+    {
+      "text": "i broke my leg",
+      "intent": "diagnose",
+      "entities": [
+        {
+          "entity": "UserState::Abnormal",
+          "startPos": 1,
+          "endPos": 3
+        }
+      ]
+    },
+    {
+      "text": "yes, i'm in san francisco",
+      "intent": "sendCall",
+      "entities": [
+        {
+          "entity": "answer",
+          "startPos": 0,
+          "endPos": 0
+        },
+        {
+          "entity": "location",
+          "startPos": 6,
+          "endPos": 7
         }
       ]
     }

@@ -53,6 +53,3 @@ exports.healthDialog = function (bot, builder){
   return dialog;
 
 };
-
-
-

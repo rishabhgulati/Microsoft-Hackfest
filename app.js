@@ -17,9 +17,11 @@ var connector = new builder.ChatConnector({
 });
 var bot = new builder.UniversalBot(connector);
 
-require("./dialog.health.js").healthDialog(bot, builder, process);
+//non luis simple health waterfall
+//require("./dialog.bot.health.js").healthBotDialog(bot, builder, bandDataHandler);
 
-//var dialogHealth = require('./dialog.health.js');
+//health dialog with luis integration
+require("./dialog.health.js").healthDialog(bot, builder, process);
 
 server.post('/api/messages', connector.listen());
 
@@ -34,14 +36,13 @@ server.get('/sensor', bandDataHandler.processBandData);
 // Bots Dialogs
 //=========================================================
 
-
-
 bot.dialog('/HealthWF', [
 
     function(session) {
         session.send("Hello. I am an emergency bot.");
         console.log('HeartRate ' + bandDataHandler.getLastHeartRate() + ', Latitude ' +
             bandDataHandler.getLatitude() + ', Longitude ' + bandDataHandler.getLongitude());
+
         builder.Prompts.choice(session, "What's the emergency?", emergencies);
     },
 
