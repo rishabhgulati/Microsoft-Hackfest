@@ -17,7 +17,7 @@ var connector = new builder.ChatConnector({
 });
 var bot = new builder.UniversalBot(connector);
 
-require("./dialog.health.js").healthDialog(bot, builder);
+require("./dialog.health.js").healthDialog(bot, builder, process);
 
 //var dialogHealth = require('./dialog.health.js');
 
