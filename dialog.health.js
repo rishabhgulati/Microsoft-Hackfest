@@ -2,7 +2,8 @@
 
 exports.healthDialog = function (bot, builder){
 
-  var intents = require("./dialog.luis.js").luis(builder);
+  //var intents = require("./dialog.luis.js").luis(builder);
+  var intents = require("./flow.js");
   bot.dialog('/',intents);
 
   var dialog = bot.dialog('/health', [

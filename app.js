@@ -21,6 +21,7 @@ var bot = new builder.UniversalBot(connector);
 //require("./dialog.bot.health.js").healthBotDialog(bot, builder, bandDataHandler);
 
 //health dialog with luis integration
+//require("./dialog.health.js").healthDialog(bot, builder, process);
 require("./dialog.health.js").healthDialog(bot, builder, process);
 
 server.post('/api/messages', connector.listen());

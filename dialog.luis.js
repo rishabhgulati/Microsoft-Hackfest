@@ -1,7 +1,6 @@
 exports.luis = function(builder){
 
     // Main dialog with LUIS
-    //
     var LuisModeUrl = /*process.env.LUIS_URL ||*/'https://iswudev.azure-api.net/luis/v2.0/apps/c4af3be6-61b2-4c02-8b12-6a1f7f10eec8?subscription-key=c2cd164e833947fbb41ae9a3d9886a1f&verbose=true';
     var recognizer = new builder.LuisRecognizer(LuisModeUrl);
     //var recognizer = new builder.LuisRecognizer('https://iswudev.azure-api.net/luis/v2.0/apps/98eead94-8470-4337-9280-5bb7d5fb8502?subscription-key=c2cd164e833947fbb41ae9a3d9886a1f&verbose=true');
