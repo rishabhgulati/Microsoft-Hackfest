@@ -38,9 +38,12 @@ module.exports = new builder.IntentDialog({ recognizers: [recognizer] })
             if(!intensity) {
                 // no value provided. exit
                 session.endConversation("I didn't receive a response");
-            } else if(intensity === 10) {
+            } else if(intensity == 'high') {
                 // determine location
                 builder.Prompts.text(session, 'What is your location?');
+                //fetch GPS location?
+            } else if((intensity == 'low') || (intensity == 'med')) {
+                session.endConversation("(Severity --> low/med) You're not dead yet. (keyword: yet)");
             } else {
                 session.endConversation("You're not dead yet. (keyword: yet)");
             }
