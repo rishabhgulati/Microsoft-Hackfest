@@ -1,9 +1,11 @@
 exports.luis = function(builder){
 
     // Main dialog with LUIS
-    //var recognizer = new builder.LuisRecognizer(LuisModelUrl);
+    //
+    var LuisModeUrl = process.env.LUIS_URL;
+    var recognizer = new builder.LuisRecognizer(LuisModelUrl);
     //var recognizer = new builder.LuisRecognizer('https://iswudev.azure-api.net/luis/v2.0/apps/98eead94-8470-4337-9280-5bb7d5fb8502?subscription-key=c2cd164e833947fbb41ae9a3d9886a1f&verbose=true');
-    var recognizer = new builder.LuisRecognizer('https://iswudev.azure-api.net/luis/v2.0/apps/179161aa-5602-46b2-9e21-05c59f496391?subscription-key=c2cd164e833947fbb41ae9a3d9886a1f&verbose=true');
+    //var recognizer = new builder.LuisRecognizer('https://iswudev.azure-api.net/luis/v2.0/apps/8b5b16e1-6cdb-4b1c-ac30-62c4d499c6cd?subscription-key=c2cd164e833947fbb41ae9a3d9886a1f&verbose=true');
     var intents = new builder.IntentDialog({ recognizers: [recognizer] })
     .matches('sendCall', [
         function (session, args, next) {
