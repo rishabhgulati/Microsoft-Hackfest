@@ -36,7 +36,7 @@ server.get('/sensor', bandDataHandler.processBandData);
 
 
 
-bot.dialog('/', [
+bot.dialog('/HealthWF', [
 
     function(session) {
         session.send("Hello. I am an emergency bot.");

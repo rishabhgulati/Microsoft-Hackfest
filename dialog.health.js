@@ -3,8 +3,9 @@
 exports.healthDialog = function (bot, builder){
 
   var intents = require("./dialog.luis.js").luis(builder);
+  bot.dialog('/',intents);
 
-  var dialog = bot.dialog('/Health', [
+  var dialog = bot.dialog('/health', [
       function(session) {
           builder.Prompts.text(session, "What's your condition?");
       },
@@ -37,7 +38,6 @@ exports.healthDialog = function (bot, builder){
                   break;
               case "Severe":
 
-                  bot.dialog('/diagnose',intents);
                   break;
               default:
                   session.replaceDialog("/");
