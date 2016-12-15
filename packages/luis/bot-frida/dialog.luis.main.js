@@ -80,7 +80,8 @@ var intents = new builder.IntentDialog({
             switch (results.response.entity) {
                 case "Mild":
                 case "Sharp":
-                    if (bandDataHandler.getLatitude() == 0 || bandDataHandler.getLongitude() == 0) {
+                    console.log(bandDataHandler.getLatitude());
+                    if (typeof bandDataHandler.getLatitude() === 'undefined' || typeof bandDataHandler.getLongitude() === 'undefined') {
                         session.send("Can't detect lat/lng");
                     } else {
                         //suggest doctors/hospitals nearby
