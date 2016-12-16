@@ -68,6 +68,8 @@ exports.luis = function(bot, bandDataHandler) {
                 }
             },
             (session, results) => {
+                console.log("condition " + session.message.text);
+                session.privateConversationData.condition = session.message.text;
                 // retrieve the userState from results.response
                 // Store the value in a variable and in the private conversation data
                 let userState = session.privateConversationData.userState = results.response;
@@ -87,7 +89,7 @@ exports.luis = function(bot, bandDataHandler) {
                     case "Sharp":
                         console.log(bandDataHandler.getLatitude());
                         if (typeof bandDataHandler.getLatitude() === 'undefined' || typeof bandDataHandler.getLongitude() === 'undefined') {
-                            session.send("Can't detect lat/lng");
+                            session.send("Can't detect your current location");
                             session.endDialog();
                         } else {
                             session.sendTyping();
@@ -99,8 +101,19 @@ exports.luis = function(bot, bandDataHandler) {
                         }
                         break;
                     case "Severe":
-                        session.send("This could be a heart attack,Calling 911");
-                        session.endDialog();
+                        var heartRate = bandDataHandler.getLastHeartRate();
+                        if (session.privateConversationData.condition.includes('chest') && heartRate != 0) {
+                            if (heartRate > 80) {
+                                session.send("Last Heart Rate detected " + heartRate + ". This could be an emergency, calling 911");
+                                session.endDialog();
+                            } else {
+                                session.send("Your last Heart Rate (" + heartRate + ") seems normal. Take care.");
+                                session.endDialog();
+                            }
+                        }else{
+                          session.send("Unable to get current Heart Rate. This could be an emergency, calling 911");
+                          session.endDialog();
+                        }
                         break;
                     default:
                         //no default case required as the framework handles invalid inputs
