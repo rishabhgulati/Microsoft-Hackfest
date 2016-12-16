@@ -38,7 +38,7 @@ server.get('/sensor', bandDataHandler.processBandData);
 
 bot.dialog('/', [
     function(session) {
-        session.send("Hello. I am an emergency bot.");
+        session.send("Hello, my name is Frida. I am an emergency bot.");
         // console.log('HeartRate ' + bandDataHandler.getLastHeartRate() + ', Latitude ' +
         //     bandDataHandler.getLatitude() + ', Longitude ' + bandDataHandler.getLongitude());
         builder.Prompts.choice(session, "What can I help you with?", emergencies);
@@ -52,9 +52,11 @@ bot.dialog('/', [
                 break;
             case emergencies[1]:
                 console.log(emergencies[1]);
+                session.endConversation("I am sorry, I currently support only Health.")
                 break;
             case emergencies[2]:
                 console.log(emergencies[2]);
+                session.endConversation("I am sorry, I currently support only Health.")
                 break;
             default:
         }

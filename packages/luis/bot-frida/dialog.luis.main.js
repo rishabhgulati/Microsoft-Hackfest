@@ -94,6 +94,7 @@ exports.luis = function(bot, bandDataHandler) {
                         } else {
                             session.sendTyping();
                             //suggest doctors/hospitals nearby
+                            session.send("Here are some doctors near you");
                             places.getPlaces(bandDataHandler.getLatitude(), bandDataHandler.getLongitude(), function(data) {
                                 getCards(data, session, bot, builder);
                             });
