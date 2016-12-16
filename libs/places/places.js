@@ -12,9 +12,8 @@ module.exports.getPlaces = function(latitude, longitude, callback) {
         }
         var location = latitude + ',' + longitude;
         //var placesApiURL = "https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=" + location + "&radius=500&type=hospital&key=" + placesApiKey;
-        var placesApiURL = "/maps/api/place/nearbysearch/json?location=" + location + "&radius=500&type=hospital&key=" + placesApiKey;
+        var placesApiURL = "/maps/api/place/nearbysearch/json?location=" + location + "&radius=500&type=doctor&key=" + placesApiKey;
         console.log(placesApiURL);
-
         callGooglePlacesApi(placesApiURL, callback);
     }
 }
