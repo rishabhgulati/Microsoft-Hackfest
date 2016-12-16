@@ -88,7 +88,9 @@ exports.luis = function(bot, bandDataHandler) {
                         console.log(bandDataHandler.getLatitude());
                         if (typeof bandDataHandler.getLatitude() === 'undefined' || typeof bandDataHandler.getLongitude() === 'undefined') {
                             session.send("Can't detect lat/lng");
+                            session.endDialog();
                         } else {
+                            session.sendTyping();
                             //suggest doctors/hospitals nearby
                             places.getPlaces(bandDataHandler.getLatitude(), bandDataHandler.getLongitude(), function(data) {
                                 getCards(data, session, bot, builder);
