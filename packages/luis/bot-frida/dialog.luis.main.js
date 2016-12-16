@@ -31,7 +31,9 @@ var getCards = function(data, session, bot, builder) {
                 //.text('Store and help protect your data. Get durable, highly available data storage across the globe and pay only for what you use.')
                 .images([
                     //builder.CardImage.create(session, result.icon)
-                    builder.CardImage.create(session, 'https://upload.wikimedia.org/wikipedia/commons/6/66/Stub_doctors.svg')
+
+                    //currently hardcoding the icon image for displaying
+                    builder.CardImage.create(session, 'http://icons.iconarchive.com/icons/bevel-and-emboss/character/256/doctor-icon.png')
                 ])
                 .buttons([
                     builder.CardAction.openUrl(session, 'https://google.com/', 'Book Appointment')
