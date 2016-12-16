@@ -97,7 +97,7 @@ exports.luis = function(bot, bandDataHandler) {
                         }
                         break;
                     case "Severe":
-                        session.send("This could be a heart attack, Calling 911");
+                        session.send("This could be a heart attack,Calling 911");
                         session.endDialog();
                         break;
                     default:

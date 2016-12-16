@@ -25,7 +25,7 @@ require("./dialog.health.js").healthDialog(bot, builder, bandDataHandler);
 
 server.post('/api/messages', connector.listen());
 
-var emergencies = ['Health', 'Crime', 'Catastrophe'];
+var emergencies = ['Health', 'Crime', 'Search'];
 
 //const LuisModelUrl = process.env.LUIS_URL;
 
@@ -36,28 +36,25 @@ server.get('/sensor', bandDataHandler.processBandData);
 // Bots Dialogs
 //=========================================================
 
-bot.dialog('/HealthToo', [
-
+bot.dialog('/', [
     function(session) {
         session.send("Hello. I am an emergency bot.");
-        console.log('HeartRate ' + bandDataHandler.getLastHeartRate() + ', Latitude ' +
-            bandDataHandler.getLatitude() + ', Longitude ' + bandDataHandler.getLongitude());
-
-        builder.Prompts.choice(session, "What's the emergency?", emergencies);
+        // console.log('HeartRate ' + bandDataHandler.getLastHeartRate() + ', Latitude ' +
+        //     bandDataHandler.getLatitude() + ', Longitude ' + bandDataHandler.getLongitude());
+        builder.Prompts.choice(session, "What can I help you with?", emergencies);
     },
-
     function(session, results) {
         session.userData.emergency = results.response.entity;
         switch (session.userData.emergency) {
             case emergencies[0]:
-                session.send(emergencies[0]);
-                session.replaceDialog('/Health');
+                console.log(emergencies[0]);
+                session.replaceDialog('/luis');
                 break;
             case emergencies[1]:
-                session.send(emergencies[1]);
+                console.log(emergencies[1]);
                 break;
             case emergencies[2]:
-                session.send(emergencies[2]);
+                console.log(emergencies[2]);
                 break;
             default:
         }
