@@ -52,11 +52,11 @@ bot.dialog('/', [
                 break;
             case emergencies[1]:
                 console.log(emergencies[1]);
-                session.endConversation("I am sorry, I currently support only Health.")
+                session.replaceDialog('/luis');
                 break;
             case emergencies[2]:
                 console.log(emergencies[2]);
-                session.endConversation("I am sorry, I currently support only Health.")
+                session.endConversation("Iggy Pop says: Search and Destroy!")
                 break;
             default:
         }
