@@ -55,72 +55,14 @@ exports.luis = function(bot, bandDataHandler) {
             (session, args, next) => {
                 var fetchArgs = (args) ? args : null;
                 console.log(fetchArgs);
-
                 session.privateConversationData.args = args;
                 let userState = session.privateConversationData.userState = builder.EntityRecognizer.findEntity(args.entities, 'UserState');
-                if (userState) {
-                    next({
-                        response: userState
-                    });
-                } else {
-                    builder.Prompts.text(session, 'What is your current condition?');
+                session.beginDialog('/health');
+                
                 }
-            },
-            (session, results) => {
-                console.log("condition= " + session.message.text);
-                session.privateConversationData.condition = session.message.text;
-                // retrieve the userState from results.response
-                // Store the value in a variable and in the private conversation data
-                let userState = session.privateConversationData.userState = results.response;
-
-                if (!userState) {
-                    // if it's empty, the user didn't give us any information. exit conversation
-                    session.endConversation("I didn't get a response. Exiting conversation.");
-                } else {
-                    // retrieve the intensity
-                    //builder.Prompts.number(session, 'What is the intensity on a scale of 1-10, with 10 being worst.');
-                    builder.Prompts.choice(session, "How severe is the pain?", ["Mild", "Sharp", "Severe"]);
-                }
-            },
-            (session, results) => {
-                switch (results.response.entity) {
-                    case "Mild":
-                    case "Sharp":
-                        console.log(bandDataHandler.getLatitude());
-                        if (typeof bandDataHandler.getLatitude() === 'undefined' || typeof bandDataHandler.getLongitude() === 'undefined') {
-                            session.send("Can't detect your current location");
-                            session.endDialog();
-                        } else {
-                            session.sendTyping();
-                            //suggest doctors/hospitals nearby
-                            session.send("Here are some doctors near you");
-                            places.getPlaces(bandDataHandler.getLatitude(), bandDataHandler.getLongitude(), function(data) {
-                                getCards(data, session, bot, builder);
-                            });
-                            session.endDialog();
-                        }
-                        break;
-                    case "Severe":
-                        var heartRate = bandDataHandler.getLastHeartRate();
-                        if (session.privateConversationData.condition.includes('chest') && heartRate != 0) {
-                            if (heartRate > 80) {
-                                session.send("Last Heart Rate detected " + heartRate + ". This could be an emergency, calling 911");
-                                session.endDialog();
-                            } else {
-                                session.send("Your last Heart Rate (" + heartRate + ") seems normal. Take care.");
-                                session.endDialog();
-                            }
-                        }else{
-                          session.send("Unable to get current Heart Rate. This could be an emergency, calling 911");
-                          session.endDialog();
-                        }
-                        break;
-                    default:
-                        //no default case required as the framework handles invalid inputs
-                        //and prompts the user to enter a valid input
-                }
-            }
         ])
+
+            
 //New Waterfall Sprint6
         .matches('CrimeReport', [
             (session, args, next) => {
@@ -135,7 +77,7 @@ exports.luis = function(bot, bandDataHandler) {
                     });
                 } else {
                     // ask about the name
-                    builder.Prompts.text(session, "What is your name sir?");
+                    builder.Prompts.text(session, "What is your name?");
                 }
             },
              (session, results) => {
@@ -151,7 +93,7 @@ exports.luis = function(bot, bandDataHandler) {
                 builder.Prompts.choice(session, "Are you in immediate danger, "+ name +"?", ["Y", "N"]);
                 }
              },
-             (session, results) => {
+             (session, results, situation) => {
                 switch (results.response.entity) {
                     case "Y":
                         console.log(bandDataHandler.getLatitude());
@@ -161,7 +103,7 @@ exports.luis = function(bot, bandDataHandler) {
                         } else {
                             session.sendTyping();
                             //suggest doctors/hospitals nearby
-                            session.send("I got your GPS reading sir, a patrol car is heading your way");
+                            session.send("I got your GPS reading, a patrol car is heading your way");
                             places.getPlaces(bandDataHandler.getLatitude(), bandDataHandler.getLongitude(), function(data) {
                                 getCards(data, session, bot, builder);
                             });
@@ -170,42 +112,61 @@ exports.luis = function(bot, bandDataHandler) {
                         session.endConversation("Have a good day, " + session.privateConversationData.name +"");
                         break;
                     case "N":
-                        // builder.Prompts.text(session, "What situation do you want to report?")
-                        bot.add('/', new builder.IntentDialog('model')
-                        .onDefault('/extensions'));
-                        bot.add('/extensions', new builder.IntentDialog('extension model')
-                        .on('extension model', function (session) {
-                        builder.Prompts.choice(session, "What situation do you want to report?");
-                        console.log("situation= " + session.message.text);
-                        session.privateConversationData.situation = session.message.text;
-                        let  situation = session.privateConversationData.situation = results.response
-                            intents.matches ('StolenGoodsReport', [
-
-                                (session, args, next) => {
-                                var fetchArgs = (args) ? args : null;
-                                console.log(fetchArgs);
-                                session.privateConversationData.args = args;
-                                session.send("What kind of goods have been stolen?"); 
-                                session.endDialog()
-                                }
-                        ])
-                        intents.matches ('AssaultReport', [
-                             (session, args, next) => {
-                            var fetchArgs = (args) ? args : null;
-                            console.log(fetchArgs),
-                            session.send("Ok."),
-                            session.endDialog()
-                             }
-                        ])    
-
-                        session.endConversation("Have a good day, " + session.privateConversationData.name +"")}))
+                        session.endDialog();
+                        session.beginDialog('/crime');
+                    }
                 }
-             }
                         ])
 
                     
 
-        .matches('search', [
+         .matches ('StolenGoodsReport', [
+            (session, args, next) => {
+                var fetchArgs = (args) ? args : null;
+                console.log(fetchArgs);
+                    session.privateConversationData.args = args;
+                    builder.Prompts.text(session, "What goods have been stolen from you?")},
+                    (session, results) => {
+                 // retrieve the stolen from results.response
+                // Store the value in a variable and in the private conversation data
+                    console.log("stolen= " + session.message.text);
+                    session.privateConversationData.stolen = session.message.text;
+                    let stolen = session.privateConversationData.stolen = results.response
+                    if (!stolen) {
+                    // if stolen is empty, the user didn't give us the name, anonymous calls are not accepted, exit conversation
+                        session.endConversation("I didn't get a response. Exiting conversation.");
+                        session.endDialog(); 
+                        }
+                    else {
+                        session.send("Thanks. I am going to report your incident to the authorities.");                
+                        session.endDialog(); 
+                        }
+                    }                     
+            ])
+                         
+         .matches ('AssaultReport', [
+            (session, args, next) => {
+                 var fetchArgs = (args) ? args : null;
+                 console.log(fetchArgs);
+                  session.privateConversationData.args = args;
+                    builder.Prompts.choice(session, "Are you hurt?" , ["Y", "N"])},
+                      (session, results, args) => {
+                         switch (results.response.entity) {
+                                case "Y":
+                                //let userState = session.privateConversationData.userState = builder.EntityRecognizer.findEntity(args.entities, 'UserState');
+                                session.endDialog(); 
+                                session.replaceDialog('/health');
+                                break;
+                                case "N":
+                                session.send("Thanks. I am going to report your incident to the authorities.");                
+                                session.endDialog(); 
+                                break;
+                                                          }
+                      }
+                    
+            ])   
+
+               .matches('search', [
             (session, args, next) => {
                 session.send("(\'search\' activation)");
                 Bing.composite(JSON.stringify(session.message.text), {
@@ -215,6 +176,7 @@ exports.luis = function(bot, bandDataHandler) {
                 })
             }
         ])
+
         .onDefault([
             (session, args, next) => {
                 var fetchArgs = (args) ? args : null;
@@ -222,7 +184,7 @@ exports.luis = function(bot, bandDataHandler) {
 
                 session.endConversation("Triggered \'onDefault\' -- Done");
             }
-        ]);
+        ])
 
     return intents;
 }
